@@ -21,6 +21,7 @@
     "lint": "eslint .",
     "lint:strict": "eslint --max-warnings 0 .",
     "typecheck": "tsc",
+    "test": "uvu -r esbuild-register tests -i utils",
     "build": "node build.js && tsc -p tsconfig.build.json && clear-package-json package.json -o dist/package.json"
   },
   "nano-staged": {
@@ -56,12 +57,14 @@
     "@typescript-eslint/parser": "^6.1.0",
     "clean-publish": "^4.2.0",
     "esbuild": "^0.18.16",
+    "esbuild-register": "^3.4.2",
     "eslint": "^8.45.0",
     "eslint-config-foxkit": "3.0.0-rc1",
     "eslint-config-prettier": "^8.8.0",
     "nano-staged": "^0.8.0",
     "prettier": "^3.0.0",
     "simple-git-hooks": "^2.9.0",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "uvu": "^0.5.6"
   }
 }
