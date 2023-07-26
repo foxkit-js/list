@@ -1,10 +1,16 @@
 {
-  "name": "library-template",
+  "name": "@foxkit/list",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
-  "author": "YOUR_NAME_HERE",
-  "repository": "foxkit-js/library-template",
+  "description": "Doubly-linked List class",
+  "keywords": [
+    "list",
+    "datastructure",
+    "linked list",
+    "object",
+    "class"
+  ],
+  "author": "Mitsunee",
+  "repository": "foxkit-js/list",
   "license": "MIT",
   "type": "module",
   "main": "src/index.ts",
@@ -18,7 +24,7 @@
     "build": "node build.js && tsc -p tsconfig.build.json && clear-package-json package.json -o dist/package.json"
   },
   "nano-staged": {
-    "**/*.{js,cjs,mjs,ts,mts,cts,json,md,yaml}": [
+    "**/*.{js,cjs,mjs,ts,json,md,yaml}": [
       "prettier -w"
     ]
   },
