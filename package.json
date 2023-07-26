@@ -1,0 +1,61 @@
+{
+  "name": "library-template",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "YOUR_NAME_HERE",
+  "repository": "foxkit-js/library-template",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "prepare": "simple-git-hooks",
+    "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "lint": "eslint .",
+    "lint:strict": "eslint --max-warnings 0 .",
+    "typecheck": "tsc",
+    "build": "node build.js && tsc -p tsconfig.build.json && clear-package-json package.json -o dist/package.json"
+  },
+  "nano-staged": {
+    "**/*.{js,cjs,mjs,ts,mts,cts,json,md,yaml}": [
+      "prettier -w"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm nano-staged"
+  },
+  "files": [
+    "*.d.ts",
+    "index.*"
+  ],
+  "clean-publish": {
+    "packageManager": "pnpm",
+    "withoutPublish": true,
+    "tempDir": "dist",
+    "fields": [
+      "scripts",
+      "nano-staged",
+      "simple-git-hooks"
+    ]
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "index.cjs",
+    "module": "index.js",
+    "types": "index.d.ts"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "clean-publish": "^4.2.0",
+    "esbuild": "^0.18.16",
+    "eslint": "^8.45.0",
+    "eslint-config-foxkit": "3.0.0-rc1",
+    "eslint-config-prettier": "^8.8.0",
+    "nano-staged": "^0.8.0",
+    "prettier": "^3.0.0",
+    "simple-git-hooks": "^2.9.0",
+    "typescript": "5.1.6"
+  }
+}
