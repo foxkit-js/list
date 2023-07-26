@@ -21,6 +21,11 @@ export class List<T> {
   #tail: ListNode<T> | null = null;
   #length: number = 0;
 
+  /**
+   * Creates new List from Array
+   * @param arr Array to turn into List
+   * @returns List
+   */
   static fromArray<T>(arr: T[] | readonly T[]): List<T> {
     const list = new List<T>();
     for (let i = 0; i < arr.length; i++) {
@@ -29,19 +34,33 @@ export class List<T> {
     return list;
   }
 
+  /**
+   * Checks if an object (or any other value) is a List
+   * @param list Object that may be a list
+   * @returns boolean
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isList(list: any): list is List<any> {
     return list instanceof List;
   }
 
+  /**
+   * First value of the List
+   */
   get head() {
     return this.#head?.value;
   }
 
+  /**
+   * Last value of the List
+   */
   get tail() {
     return this.#tail?.value;
   }
 
+  /**
+   * Current length of the List
+   */
   get length() {
     return this.#length;
   }

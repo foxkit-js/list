@@ -20,16 +20,18 @@ yarn add @foxkit/list
 
 ## Usage
 
-Create a new list or convert another iterable data structure:
+Create a new list and use [methods](docs/methods.md) to add and interact with data:
 
 ```js
 import { List } from "@foxkit/list";
 
 const list = new List();
-// or
-const list = List.fromArray(myArray);
+list.push("foobar").push("bazbar");
+list.forEach(val => console.log(val));
+/* logs:
+ * "foobar"
+ * "bazbar"
+ */
 ```
 
-### Methods
-
-Documentation WIP
+See [Documentation](docs/README.md) for further information.
