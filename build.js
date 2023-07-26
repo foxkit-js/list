@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import path from "path";
 import * as esbuild from "esbuild";
 
 /**
@@ -64,22 +65,20 @@ async function build() {
 
   // Copy README file
   console.log("Copying README.md");
-  await fs.cp(
-    /**
-     * You can change this to a different file if you prefer a shortened
-     * version of your README in npm packages
-     */
-    "./README.md",
-    "dist/README.md",
-    { force: true }
-  );
+  await fs.cp("./README.md", path.join(config.outdir, "README.md"));
 
-  /**
-   * Further Ideas:
-   * - If you are not using TypeScript and still want d.ts files to be published
-   *   you could use `await fs.readdir(".")` and `Array.prototype.filter` to
-   *   find these files and also copy them
-   */
+  // Copy Documentation
+  console.log("Copying Documentation");
+  const distDocs = path.join(config.outdir, "docs");
+  await fs.mkdir(distDocs);
+  const docsDir = await fs
+    .readdir("docs")
+    .then(files => files.filter(file => file.endsWith(".md")));
+  await Promise.all(
+    docsDir.map(file =>
+      fs.cp(path.join("docs", file), path.join(distDocs, file))
+    )
+  );
 }
 
 build().then(() => {

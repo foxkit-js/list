@@ -33,6 +33,7 @@
     "pre-commit": "pnpm nano-staged"
   },
   "files": [
+    "docs",
     "*.d.ts",
     "index.*"
   ],
