@@ -21,7 +21,7 @@ export class List<T> {
   #tail: ListNode<T> | null = null;
   #length: number = 0;
 
-  static fromArray<T>(arr: T[]): List<T> {
+  static fromArray<T>(arr: T[] | readonly T[]): List<T> {
     const list = new List<T>();
     for (let i = 0; i < arr.length; i++) {
       list.push(arr[i]);
@@ -199,7 +199,7 @@ export class List<T> {
     return arr;
   }
 
-  insertArray(index: number, arr: T[]): boolean {
+  insertArray(index: number, arr: T[] | readonly T[]): boolean {
     if (index < 0 || index > this.length) return false;
     if (arr.length == 0) return true;
     switch (index) {
@@ -250,7 +250,7 @@ export class List<T> {
     return newList;
   }
 
-  concat(value: List<T> | Array<T>): List<T> {
+  concat(value: List<T> | Array<T> | readonly T[]): List<T> {
     const newList = this.clone();
     if (List.isList(value)) {
       newList.insertList(newList.length, value);
