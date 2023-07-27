@@ -266,6 +266,10 @@ export class List<T> {
     return true;
   }
 
+  /**
+   * Creates Array with all List values in order.
+   * @returns Array
+   */
   toArray(): T[] {
     const arr = new Array<T>();
 
@@ -278,6 +282,14 @@ export class List<T> {
     return arr;
   }
 
+  /**
+   * Inserts all values from an Array into List at a given index and
+   * returns `true`. If the index is outside of the range of the List
+   * `false` is returned.
+   * @param index Index at which to start insertion
+   * @param arr Array of Values
+   * @returns boolean
+   */
   insertArray(index: number, arr: T[] | readonly T[]): boolean {
     if (index < 0 || index > this.length) return false;
     if (arr.length == 0) return true;
@@ -313,12 +325,24 @@ export class List<T> {
     }
   }
 
+  /**
+   * Inserts all values from another List into List at a given index and
+   * returns `true`. If the index is outside of the range of the List `false` is
+   * returned.
+   * @param index Index at which to start insertion
+   * @param list List from which to take values
+   * @returns boolean
+   */
   insertList(index: number, list: List<T>): boolean {
     if (index < 0 || index > this.length || !List.isList(list)) return false;
     const arr = list.toArray();
     return this.insertArray(index, arr);
   }
 
+  /**
+   * Creates a copy of the current List
+   * @returns new List
+   */
   clone(): List<T> {
     const newList = new List<T>();
     let curr = this.#head;
@@ -329,6 +353,11 @@ export class List<T> {
     return newList;
   }
 
+  /**
+   * Combines List or Array with current List. The existing List is not modified.
+   * @param value List or Array of Values
+   * @returns new List
+   */
   concat(value: List<T> | Array<T> | readonly T[]): List<T> {
     const newList = this.clone();
     if (List.isList(value)) {
@@ -339,6 +368,10 @@ export class List<T> {
     return newList;
   }
 
+  /**
+   * Creates iterable of index, value pairs for every entry in the List.
+   * @returns IterableIterator
+   */
   // not tested as this is basically a proxy of the existing Array method
   entries() {
     return this.toArray().entries();

@@ -6,3 +6,4 @@ This page serves as the index to the manual:
 - [List Properties](properties.md)
 - List Methods
   - [Adding and Removing from Lists](methods/adding-removing.md)
+  - [Working with other Data objects](methods/with-other-objects.md)
