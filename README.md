@@ -20,7 +20,7 @@ yarn add @foxkit/list
 
 ## Usage
 
-Create a new list and use [methods](docs/methods.md) to add and interact with data:
+Create a new list and use [methods](docs/README.md) to add and interact with data:
 
 ```js
 import { List } from "@foxkit/list";

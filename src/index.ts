@@ -65,6 +65,12 @@ export class List<T> {
     return this.#length;
   }
 
+  /**
+   * Adds value to the end of the List.
+   * Further methods can be chained after this method.
+   * @param value Value to add
+   * @returns `this` Reference
+   */
   push(value: T) {
     const node = new ListNode(value);
     if (this.#tail == null) {
@@ -78,6 +84,11 @@ export class List<T> {
     return this;
   }
 
+  /**
+   * Removes the last element from the List and returns it.
+   * If the List is empty `undefined` is returned.
+   * @returns Value or `undefined`
+   */
   pop() {
     if (this.#tail == null) return undefined;
     const node = this.#tail;
@@ -95,6 +106,11 @@ export class List<T> {
     return node.value;
   }
 
+  /**
+   * Removes the first element from the List and returns it.
+   * If the List is empty `undefined` is returned.
+   * @returns Value or `undefined`
+   */
   shift() {
     if (this.#head == null) return undefined;
     const node = this.#head;
@@ -106,6 +122,12 @@ export class List<T> {
     return node.value;
   }
 
+  /**
+   * Adds value to the start of the List.
+   * Further methods can be chained after this method.
+   * @param value Value to add
+   * @returns `this` Reference
+   */
   unshift(value: T) {
     const node = new ListNode(value);
     if (this.#head) {
@@ -119,6 +141,12 @@ export class List<T> {
     return this;
   }
 
+  /**
+   * Gets `ListNode` at specific index. If the index is outside of the
+   * range of the List `undefined` is returned.
+   * @param n Index of the element
+   * @returns `ListNode` or `undefined`
+   */
   getNode(n: number) {
     if (n < 0 || n >= this.#length) return undefined;
     const mid = this.#length / 2;
@@ -137,12 +165,27 @@ export class List<T> {
     return curr;
   }
 
+  /**
+   * Gets value at specific index. If the index is outside of the range
+   * of the List `undefined` is returned.
+   * @param index Index of the element
+   * @returns Value or `undefined`
+   */
   get(index: number) {
     const node = this.getNode(index);
     if (node) return node.value;
     return undefined;
   }
 
+  /**
+   * Sets value at specific index and returns `true`. If the index is
+   * outside of the range of the List `false` is returned.
+   * If the index would correspond to the next new element this method
+   * acts as an alias to `push`.
+   * @param index Index of the element to set
+   * @param value Value to set
+   * @returns boolean
+   */
   set(index: number, value: T) {
     if (index == this.#length) {
       this.push(value);
@@ -155,6 +198,15 @@ export class List<T> {
     return true;
   }
 
+  /**
+   * Inserts value at index and returns `true`. If the index is outside
+   * of the range of the List `false` is returned.
+   * If the index would correspond to the next new element this method
+   * acts as an alias to `push`.
+   * @param index Index of where to insert the new element
+   * @param value Value of the new element
+   * @returns boolean
+   */
   insert(index: number, value: T): boolean {
     if (index < 0 || index > this.length) return false;
     switch (index) {
@@ -176,6 +228,14 @@ export class List<T> {
     }
   }
 
+  /**
+   * Removes one or more elements starting at a given index and returns
+   * `true`. If the index is outside the range of the List or a amount
+   * smaller than one is given `false` is returned.
+   * @param index Index at which to remove element(s)
+   * @param amount (optional) Amount of elements to remove (default: 1)
+   * @returns boolean
+   */
   remove(index: number, amount: number = 1) {
     if (index < 0 || index > this.length || amount < 1) return false;
     let curr = this.getNode(index)!;
