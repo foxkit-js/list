@@ -377,6 +377,11 @@ export class List<T> {
     return this.toArray().entries();
   }
 
+  /**
+   * Checks if a test callback returns `true` for every value
+   * @param callback Test callback
+   * @returns boolean
+   */
   every(callback: ListTest<T>): boolean {
     let index = 0;
     let curr = this.#head;
@@ -390,6 +395,11 @@ export class List<T> {
     return true;
   }
 
+  /**
+   * Checks if a test callback returns `true` for at least one value
+   * @param callback Test callback
+   * @returns boolean
+   */
   some(callback: ListTest<T>): boolean {
     let index = 0;
     let curr = this.#head;
@@ -403,6 +413,12 @@ export class List<T> {
     return false;
   }
 
+  /**
+   * Creates new list with only the values that the test callback
+   * returns `true` for.
+   * @param callback Test callback
+   * @returns Filtered List
+   */
   filter(callback: ListTest<T>): List<T> {
     const newList = new List<T>();
     let index = 0;
@@ -417,6 +433,12 @@ export class List<T> {
     return newList;
   }
 
+  /**
+   * Finds the index of the first value to satisfy the test callback.
+   * If no value satisfies the test `-1` is returned.
+   * @param callback Test callback
+   * @returns number
+   */
   findIndex(callback: ListTest<T>): number {
     let curr = this.#head;
     let index = 0;
@@ -430,6 +452,12 @@ export class List<T> {
     return -1;
   }
 
+  /**
+   * Find the first value to satisfy the test callback and returns it.
+   * If no value satisfies the test `undefined` is returned.
+   * @param callback
+   * @returns
+   */
   find(callback: ListTest<T>) {
     let curr = this.#head;
     let index = 0;
