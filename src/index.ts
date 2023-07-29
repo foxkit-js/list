@@ -1,6 +1,15 @@
 class ListNode<T> {
+  /**
+   * Next node in the linked list
+   */
   next: ListNode<T> | null = null;
+  /**
+   * Previous node in the linked list
+   */
   prev: ListNode<T> | null = null;
+  /**
+   * Current value of this node
+   */
   value: T;
 
   constructor(value: T) {

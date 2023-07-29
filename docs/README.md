@@ -2,6 +2,7 @@
 
 This page serves as the index to the manual:
 
+- [Usage with TypeScript](typescript.md)
 - [Static Methods](static-methods.md)
 - [List Properties](properties.md)
 - List Methods
