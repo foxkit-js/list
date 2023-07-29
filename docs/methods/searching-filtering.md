@@ -3,7 +3,12 @@
 The methods in this category are heavily inspired by methods known from Arrays and use a test callback that gets the following parameters (where `T` is the type of your List's values):
 
 ```ts
-function myCallback(value: T, index: number, self: List<T>, node: ListNode<T>) => boolean;
+function myCallback(
+  value: T,
+  index: number,
+  self: List<T>,
+  node: ListNode<T>
+): boolean;
 ```
 
 Similarly to Array method callbacks the test callback is ran on each node individually and receives the current value, index of the value and a reference to the List being processed.

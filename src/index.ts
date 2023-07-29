@@ -455,8 +455,8 @@ export class List<T> {
   /**
    * Find the first value to satisfy the test callback and returns it.
    * If no value satisfies the test `undefined` is returned.
-   * @param callback
-   * @returns
+   * @param callback Test callback
+   * @returns Value or `undefined`
    */
   find(callback: ListTest<T>) {
     let curr = this.#head;
@@ -471,14 +471,34 @@ export class List<T> {
     return;
   }
 
+  /**
+   * Returns `true` if a value exists in the List, `false` if not. Values
+   * are compared with strict equality (`===`).
+   * @param value Value to search
+   * @returns boolean
+   */
   includes(value: T): boolean {
     return this.findIndex(v => v === value) >= 0;
   }
 
+  /**
+   * Searches for value in the List and returns its index. If the value
+   * is not found `-1` is returned. Values are compared with strict
+   * equality (`===`).
+   * @param value Value to search
+   * @returns number
+   */
   indexOf(value: T): number {
     return this.findIndex(v => v === value);
   }
 
+  /**
+   * Runs a function on every element of the list. The function is passed the
+   * current value, index, a reference to the full List and a reference to the
+   * ListNode corresponding to the value. The return value of the callback is
+   * ignored.
+   * @param callback Function to run
+   */
   forEach(
     callback: (
       value: T,
@@ -498,6 +518,13 @@ export class List<T> {
     return;
   }
 
+  /**
+   * Creates a new list where each value is transformed by a callback
+   * function. The function is passed the current value, index, a reference to
+   * the full List and a reference to the ListNode corresponding to the value.
+   * @param callback Callback to transform value
+   * @returns new List
+   */
   map<N>(
     callback: (value: T, index: number, self: List<T>, node: ListNode<T>) => N
   ): List<N> {
@@ -514,9 +541,19 @@ export class List<T> {
     return newList;
   }
 
+  /**
+   * Reduces a List to a single new value with a reducer function callback. The
+   * callback is passed the current accumulated value, the next value taken from
+   * the list, the index of that value, a reference to the full List and the
+   * ListNode that corresponds to the value and index. The return value is used
+   * as the new accumulated value or return from this method.
+   * @param callback Reducer callback function
+   * @param initialValue initial value to pass to the first iteration
+   * @returns accumulated value
+   */
   reduce<N>(
     callback: (
-      previousValue: N,
+      accumulatedValue: N,
       value: T,
       index: number,
       self: List<T>,
@@ -537,6 +574,11 @@ export class List<T> {
     return currentValue;
   }
 
+  /**
+   * Creates a copy of the current List in reverse order. The original List is
+   * not modified.
+   * @returns new List
+   */
   reverse(): List<T> {
     const newList = new List<T>();
     let curr = this.#tail;
@@ -549,6 +591,16 @@ export class List<T> {
     return newList;
   }
 
+  /**
+   * Creates a new List that contains a slice of value from the original List
+   * starting at a given index up to an optional end index. If no end index is
+   * given the rest of the List is included in the new List. Negative indexes
+   * are handled the same as `Array.prototype.slice`. Values are copied to the
+   * new List, meaning that modifying either List will not manipulate the other!
+   * @param start Start index
+   * @param end (optional) End index
+   * @returns new List
+   */
   slice(start: number, end?: number): List<T> {
     const newList = new List<T>();
     const startAt = start < 0 ? Math.max(0, this.#length + start) : start;
@@ -568,11 +620,26 @@ export class List<T> {
     return newList;
   }
 
+  /**
+   * Creates a new List with all values sorted by a comparison callback function.
+   * The function should return a number value the first argument should appear
+   * before the second argument, `0` if they're equal, or a positive number if
+   * the first argument should appear after the second in the new List.
+   * If no callback is passed values are sorted in ascending ASCII character order.
+   * @param callback
+   * @returns new sorted List
+   */
   sort(callback?: (a: T, b: T) => number): List<T> {
     const arr = this.toArray().sort(callback);
     return List.fromArray(arr);
   }
 
+  /**
+   * Joins the List into a string, separating values with a configurable
+   * separator string (`","` by default).
+   * @param separator (optional) Custom separator string
+   * @returns string
+   */
   join(separator: string = ",") {
     let str = "";
     if (this.#length < 1) return str;
@@ -587,6 +654,11 @@ export class List<T> {
     return str;
   }
 
+  /**
+   * Joins the List into a string using `","` as the separator. Use `join` if
+   * you would like to use a different separator.
+   * @returns
+   */
   toString() {
     return this.join(",");
   }
