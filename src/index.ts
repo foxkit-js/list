@@ -18,6 +18,11 @@ class ListNode<T> {
 }
 
 export type { ListNode };
+
+export type ListValue<L extends List<unknown>> = L extends List<infer R>
+  ? R
+  : never;
+
 export type ListTest<T> = (
   value: T,
   index: number,

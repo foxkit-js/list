@@ -24,6 +24,19 @@ const mapped = list.map<number>(val => val.length);
 
 The generic types are usually called `T` (type of the List's value) and `N` (generic type of the method) in the documentation.
 
+## `ListValue`
+
+The `ListValue` type helper can be used to extract the type of a List into a type.
+
+```ts
+import { List } from "@foxkit/list";
+import type { ListValue } from "@foxkit/list";
+
+const list = List.fromArray([1, 2, "episode 1", "episode 2"]);
+type MyValue = ListValue<typeof list>;
+//   ^? number | string
+```
+
 ## `ListTest`
 
 The test callback used by the methods in [Searching and Filtering](./methods/searching-filtering.md) is available as a type import. The `ListTest` type accepts the same generic `T` as the constructor function of the `List` class.
