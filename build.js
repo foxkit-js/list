@@ -70,15 +70,7 @@ async function build() {
   // Copy Documentation
   console.log("Copying Documentation");
   const distDocs = path.join(config.outdir, "docs");
-  await fs.mkdir(distDocs);
-  const docsDir = await fs
-    .readdir("docs")
-    .then(files => files.filter(file => file.endsWith(".md")));
-  await Promise.all(
-    docsDir.map(file =>
-      fs.cp(path.join("docs", file), path.join(distDocs, file))
-    )
-  );
+  await fs.cp("docs", distDocs, { recursive: true });
 }
 
 build().then(() => {
