@@ -1,3 +1,5 @@
+import { List } from "../../src";
+
 // prettier-ignore
 export const lorem: Readonly<Array<string>> = [
   "lorem", // 0
@@ -8,3 +10,5 @@ export const lorem: Readonly<Array<string>> = [
   "consectetur", // 5
   "adipisicing" // 6
 ]; // length: 7
+
+export const loremList = List.fromArray(lorem);

@@ -301,6 +301,54 @@ export class List<T> {
   }
 
   /**
+   * Utility method for insertArray and insertList that connects a lose list
+   * of already connected nodes into the existing list at a given index
+   * @param index index at which to insert
+   * @param first first inserted node
+   * @param last last inserted node
+   * @returns void
+   */
+  private connectLose(index: number, first: ListNode<T>, last: ListNode<T>) {
+    switch (index) {
+      case 0: {
+        const oldHead = this.#head;
+        if (oldHead) {
+          last.next = oldHead;
+          oldHead.prev = last;
+        } else {
+          this.#tail = last;
+        }
+        this.#head = first;
+        break;
+      }
+
+      case this.length: {
+        const oldTail = this.#tail;
+        if (oldTail) {
+          oldTail.next = first;
+          first.prev = oldTail;
+        } else {
+          this.#head = first;
+        }
+        this.#tail = last;
+        break;
+      }
+
+      default: {
+        const target = this.getNode(index);
+        if (!target) return false;
+
+        const prev = target.prev;
+        first.prev = prev;
+        if (prev) prev.next = first;
+
+        last.next = target;
+        target.prev = last;
+      }
+    }
+  }
+
+  /**
    * Inserts all values from an Array into List at a given index and
    * returns `true`. If the index is outside of the range of the List
    * `false` is returned.
@@ -310,38 +358,21 @@ export class List<T> {
    */
   insertArray(index: number, arr: T[] | readonly T[]): boolean {
     if (index < 0 || index > this.length) return false;
-    if (arr.length == 0) return true;
-    switch (index) {
-      case 0:
-        return this.unshift(arr[0]).insertArray(1, arr.slice(1));
-      case this.length: {
-        for (let i = 0; i < arr.length; i++) {
-          this.push(arr[i]);
-        }
-        return true;
-      }
-      default: {
-        let prev = this.getNode(index - 1);
-        if (!prev) return false;
-        const next = prev.next;
+    if (arr.length < 1) return true;
 
-        for (let i = 0; i < arr.length; i++) {
-          const node = new ListNode<T>(arr[i]);
-          prev.next = node;
-          node.prev = prev;
-
-          if (next) {
-            next.prev = node;
-            node.next = next;
-          }
-
-          prev = node;
-          this.#length++;
-        }
-
-        return true;
-      }
+    // create new list
+    const firstInserted = new ListNode(arr[0]);
+    let currentInserted = firstInserted;
+    for (let i = 1; i < arr.length; i++) {
+      const node = new ListNode(arr[i]);
+      currentInserted.next = node;
+      node.prev = currentInserted;
+      currentInserted = node;
     }
+
+    this.connectLose(index, firstInserted, currentInserted);
+    this.#length += arr.length;
+    return true;
   }
 
   /**
@@ -354,8 +385,24 @@ export class List<T> {
    */
   insertList(index: number, list: List<T>): boolean {
     if (index < 0 || index > this.length || !List.isList(list)) return false;
-    const arr = list.toArray();
-    return this.insertArray(index, arr);
+    const listHead = list.getNode(0);
+    if (!listHead) return true; // list.length == 0
+
+    // create new list
+    const firstInserted = new ListNode(listHead.value);
+    let currentInserted = firstInserted;
+    let iter = listHead.next;
+    while (iter) {
+      const node = new ListNode(iter.value);
+      currentInserted.next = node;
+      node.prev = currentInserted;
+      currentInserted = node;
+      iter = iter.next;
+    }
+
+    this.connectLose(index, firstInserted, currentInserted);
+    this.#length += list.length;
+    return true;
   }
 
   /**
