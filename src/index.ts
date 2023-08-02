@@ -106,16 +106,15 @@ export class List<T> {
   pop() {
     if (this.#tail == null) return undefined;
     const node = this.#tail;
+    const prev = node.prev;
 
-    if (this.length == 1) {
+    if (!prev) {
       this.#head = null;
-      this.#tail = null;
     } else {
-      this.#tail = node.prev;
-      this.#tail!.next = null;
-      node.prev = null;
+      prev.next = null;
     }
 
+    this.#tail = prev;
     this.#length--;
     return node.value;
   }
@@ -164,19 +163,23 @@ export class List<T> {
   getNode(n: number) {
     if (n < 0 || n >= this.#length) return undefined;
     const mid = this.#length / 2;
-    let curr: ListNode<T>;
+    let curr: ListNode<T> | null;
+
     if (n < mid) {
-      curr = this.#head!;
+      curr = this.#head;
       for (let i = 0; i < n; i++) {
-        curr = curr.next!;
+        if (!curr) return;
+        curr = curr.next;
       }
     } else {
-      curr = this.#tail!;
+      curr = this.#tail;
       for (let i = this.#length - 1; i > n; i--) {
-        curr = curr.prev!;
+        if (!curr) return;
+        curr = curr.prev;
       }
     }
-    return curr;
+
+    return curr || undefined;
   }
 
   /**
@@ -188,7 +191,7 @@ export class List<T> {
   get(index: number) {
     const node = this.getNode(index);
     if (node) return node.value;
-    return undefined;
+    return;
   }
 
   /**
@@ -230,11 +233,12 @@ export class List<T> {
         return !!this.push(value);
       default: {
         const node = new ListNode<T>(value);
-        const prev = this.getNode(index - 1)!;
-        const next = prev.next!;
+        const prev = this.getNode(index - 1);
+        if (!prev) return false;
+        const next = prev.next;
         prev.next = node;
         node.prev = prev;
-        next.prev = node;
+        if (next) next.prev = node;
         node.next = next;
         this.#length++;
         return true;
@@ -252,10 +256,10 @@ export class List<T> {
    */
   remove(index: number, amount: number = 1) {
     if (index < 0 || index > this.length || amount < 1) return false;
-    let curr = this.getNode(index)!;
-    if (!curr) return true; // this only happens when index == length == 0
+    let curr = this.getNode(index);
 
     for (let i = 0; i < amount; i++) {
+      if (!curr) return true;
       const { prev, next } = curr;
       curr.next = null;
       curr.prev = null;
@@ -317,7 +321,8 @@ export class List<T> {
         return true;
       }
       default: {
-        let prev = this.getNode(index - 1)!;
+        let prev = this.getNode(index - 1);
+        if (!prev) return false;
         const next = prev.next;
 
         for (let i = 0; i < arr.length; i++) {
@@ -655,11 +660,12 @@ export class List<T> {
    * @returns string
    */
   join(separator: string = ",") {
+    let curr = this.#head;
+    if (!curr) return "";
     let str = "";
-    if (this.#length < 1) return str;
-    str = `${this.#head!.value}`;
+    str = `${curr.value}`;
+    curr = curr.next;
 
-    let curr = this.#head!.next;
     while (curr) {
       str = `${str}${separator}${curr.value}`;
       curr = curr.next;
