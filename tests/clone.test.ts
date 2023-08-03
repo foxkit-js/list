@@ -1,11 +1,13 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
+import { assertValidList } from "./utils/assertValidList";
 import { lorem } from "./utils/lorem";
 
 test("Can clone list", () => {
   const list = List.fromArray(lorem);
   const clone = list.clone();
+  assertValidList(clone);
 
   assert.equal(clone.toArray(), list.toArray(), "lists are equal");
   assert.equal(clone.length, list.length, "lists have the same length");

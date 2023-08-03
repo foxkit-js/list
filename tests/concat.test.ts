@@ -1,6 +1,7 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
+import { assertValidList } from "./utils/assertValidList";
 import { lorem } from "./utils/lorem";
 
 test("Can concat list", () => {
@@ -18,6 +19,7 @@ test("Can concat list", () => {
     );
   }
   assert.is(output.length, expected.length, "updated length after insertion");
+  assertValidList(output);
 
   // with List
   output = list.concat(List.fromArray(lorem));
@@ -29,6 +31,7 @@ test("Can concat list", () => {
     );
   }
   assert.is(output.length, expected.length, "updated length after insertion");
+  assertValidList(output);
 });
 
 test.run();

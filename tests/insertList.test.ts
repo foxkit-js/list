@@ -1,6 +1,7 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
+import { assertValidList } from "./utils/assertValidList";
 import { lorem, loremList } from "./utils/lorem";
 
 test("rejects negative index", () => {
@@ -25,6 +26,7 @@ test("can insert at the end of the list", () => {
   }
   assert.is(list.length, expected.length, "updated length after insertion");
   assert.is(list.tail, expected[expected.length - 1], "updated tail correctly");
+  assertValidList(list);
 });
 
 test("can insert at the start of the list", () => {
@@ -41,6 +43,7 @@ test("can insert at the start of the list", () => {
   }
   assert.is(list.length, expected.length, "updated length after insertion");
   assert.is(list.head, expected[0], "updated head correctly");
+  assertValidList(list);
 });
 
 test("can insert in the middle of the list", () => {
@@ -56,6 +59,7 @@ test("can insert in the middle of the list", () => {
     );
   }
   assert.is(list.length, expected.length, "updated length after insertion");
+  assertValidList(list);
 });
 
 test("rejects index that is too large", () => {

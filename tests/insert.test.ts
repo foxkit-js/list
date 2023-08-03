@@ -1,6 +1,7 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
+import { assertValidList } from "./utils/assertValidList";
 
 test("Can insert value into list", () => {
   const list = new List();
@@ -14,11 +15,13 @@ test("Can insert value into list", () => {
   assert.ok(list.insert(0, "UNSHIFTED"), "return true");
   assert.is(list.head, "UNSHIFTED", "correctly unshifted element into list");
   assert.is(list.length, 4, "updated length after unshift");
+  assertValidList(list);
 
   // can push
   assert.ok(list.insert(4, "PUSHED"), "return true");
   assert.is(list.tail, "PUSHED", "correctly pushed element into list");
   assert.is(list.length, 5, "updated length after push");
+  assertValidList(list);
 
   // can insert
   assert.ok(list.insert(2, "INSERTED"), "return true");
@@ -26,6 +29,7 @@ test("Can insert value into list", () => {
   assert.is(list.get(2), "INSERTED", "correctly inserted element into list");
   assert.is(list.get(3), "ipsum", "correctly inserted element into list");
   assert.is(list.length, 6, "updated length after insert");
+  assertValidList(list);
 
   // bad indexes
   assert.not(list.insert(7, ""), "reject index larger than length with false");

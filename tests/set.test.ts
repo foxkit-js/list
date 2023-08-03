@@ -1,6 +1,7 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
+import { assertValidList } from "./utils/assertValidList";
 
 test("Can set value by index", () => {
   const list = new List();
@@ -16,6 +17,7 @@ test("Can set value by index", () => {
   // set index 1 to foobar
   assert.ok(list.set(1, "foobar"), "don't reject good index");
   assert.is(list.get(1), "foobar", "set value");
+  assertValidList(list);
 
   // set index equal to length (aka push)
   assert.ok(
@@ -24,6 +26,7 @@ test("Can set value by index", () => {
   );
   assert.is(list.tail, "barbaz", "correctly pushed element");
   assert.is(list.length, 4, "correctly pushed element");
+  assertValidList(list);
 });
 
 test.run();

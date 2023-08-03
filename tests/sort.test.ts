@@ -1,19 +1,22 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
+import { assertValidList } from "./utils/assertValidList";
 import { lorem } from "./utils/lorem";
 
-test("Can sort list", () => {
+test("Can sort list with no callback", () => {
   const list = List.fromArray(lorem);
-
-  // with no callback
-  let output = list.sort();
+  const output = list.sort();
   assert.equal(output.toArray(), [...lorem].sort());
+  assertValidList(list);
+});
 
-  // with callback
+test("Can sort list with callback", () => {
+  const list = List.fromArray(lorem);
   const cb = (a: string, b: string) => a.length - b.length;
-  output = list.sort(cb);
+  const output = list.sort(cb);
   assert.equal(output.toArray(), [...lorem].sort(cb));
+  assertValidList(list);
 });
 
 test.run();
