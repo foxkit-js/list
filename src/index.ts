@@ -125,12 +125,18 @@ export class List<T> {
    * @returns Value or `undefined`
    */
   shift() {
-    if (this.#head == null) return undefined;
     const node = this.#head;
-    if (node.next == null) {
+    if (!node) return undefined;
+    const next = node.next;
+    node.next = null;
+
+    if (!next) {
       this.#tail = null;
+    } else {
+      next.prev = null;
     }
-    this.#head = node.next;
+
+    this.#head = next;
     this.#length--;
     return node.value;
   }
