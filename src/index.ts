@@ -35,6 +35,34 @@ export class List<T> {
   #tail: ListNode<T> | null = null;
   #length: number = 0;
 
+  constructor(from?: Iterable<T>) {
+    if (!from) return;
+
+    // spawn iterator
+    const iterator = from[Symbol.iterator]();
+    let iterable = iterator.next();
+    if (iterable.done) return;
+
+    // prepare first node
+    const head = new ListNode(iterable.value);
+    let prev = head;
+    let length = 1;
+
+    // iterate and create list
+    while (!(iterable = iterator.next()).done) {
+      const node = new ListNode(iterable.value);
+      node.prev = prev;
+      prev.next = node;
+      prev = node;
+      length++;
+    }
+
+    // save to properties
+    this.#head = head;
+    this.#tail = prev;
+    this.#length = length;
+  }
+
   /**
    * Creates new List from Array
    * @param arr Array to turn into List
