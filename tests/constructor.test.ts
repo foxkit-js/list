@@ -30,7 +30,25 @@ test("Can create List from empty Array", () => {
   assertValidList(list);
 });
 
-// TODO: test Set
-// TODO: test Map.values()
+test("Can create List from Set", () => {
+  const set = new Set(lorem);
+  const list = new List(set);
+  assert.is(list.length, set.size, "equal size");
+  assert.is(
+    list.toArray().sort().toString(),
+    Array.from(set).sort().toString(),
+    "same contents"
+  );
+});
+
+test("Can create List from Map values", () => {
+  const map = new Map(lorem.map(([val, idx]) => [idx, val]));
+  const list = new List(map.values());
+  assert.is(list.length, map.size, "equal size");
+  assert.is(
+    list.toArray().sort().toString(),
+    Array.from(map.values()).sort().toString()
+  );
+});
 
 test.run();
