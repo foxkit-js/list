@@ -1,6 +1,7 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
+import { assertValidList } from "./utils/assertValidList";
 import { lorem } from "./utils/lorem";
 
 test("handles weird inputs", () => {
@@ -34,6 +35,7 @@ test("can remove item after head", () => {
     "head updated to point to new item at index 1"
   );
   assert.is(list.length, lorem.length - 1, "updated length");
+  assertValidList(list);
 });
 
 test("can remove from start of list", () => {
@@ -48,6 +50,7 @@ test("can remove from start of list", () => {
     "head does not point back at removed node"
   );
   assert.is(list.length, lorem.length - 2, "updated length");
+  assertValidList(list);
 });
 
 test("can remove from end of list", () => {
@@ -61,6 +64,7 @@ test("can remove from end of list", () => {
     "tail does not point forward to removed node"
   );
   assert.is(list.length, 4, "updated length");
+  assertValidList(list);
 });
 
 test("can remove multiple from middle of list", () => {
@@ -72,6 +76,7 @@ test("can remove multiple from middle of list", () => {
   assert.is(list.get(2), lorem[5]);
   assert.is(list.get(3), lorem[6]);
   assert.is(list.length, 4);
+  assertValidList(list);
 });
 
 test.run();
