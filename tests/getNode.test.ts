@@ -3,33 +3,36 @@ import * as assert from "uvu/assert";
 import { List } from "../src";
 import { lorem } from "./utils/lorem";
 
-test("Can get ListNode by index", () => {
+test("Gets undefined from empty list", () => {
   const list = new List();
-
-  // empty list
   assert.is(list.getNode(0), undefined, "return undefined for empty list");
+});
 
-  // fill list
-  list.insertArray(0, lorem);
+test("Gets undefined for numbers outside of List's range", () => {
+  const list = new List(lorem);
 
-  // number out of range
   assert.is(
     list.getNode(-1),
     undefined,
     "reject negative number with undefined"
   );
+
   assert.is(
     list.getNode(7),
     undefined,
-    "reject number greater or equal to length with undefined"
+    "reject number equal to length with undefined"
   );
+
   assert.is(
     list.getNode(8),
     undefined,
-    "reject number greater or equal to length with undefined"
+    "reject number greater than length with undefined"
   );
+});
 
-  // correct values
+test("Gets correct value for valid index", () => {
+  const list = new List(lorem);
+
   for (let i = 0; i < lorem.length; i++) {
     assert.is(
       list.getNode(i)?.value,

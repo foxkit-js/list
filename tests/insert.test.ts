@@ -3,13 +3,16 @@ import * as assert from "uvu/assert";
 import { List } from "../src";
 import { assertValidList } from "./utils/assertValidList";
 
-test("Can insert value into list", () => {
+test("Can handle invalid index", () => {
   const list = new List();
-
-  // bad index
   assert.not(list.insert(-1, "bad"), "reject negative index with false");
 
-  list.push("lorem").push("ipsum").push("dolor");
+  const listB = new List(["with", "some", "values"]);
+  assert.not(listB.insert(5, ""), "reject index larger than length with false");
+});
+
+test("Can insert value into list", () => {
+  const list = new List(["lorem", "ipsum", "dolor"]);
 
   // can unshift
   assert.ok(list.insert(0, "UNSHIFTED"), "return true");
@@ -30,9 +33,6 @@ test("Can insert value into list", () => {
   assert.is(list.get(3), "ipsum", "correctly inserted element into list");
   assert.is(list.length, 6, "updated length after insert");
   assertValidList(list);
-
-  // bad indexes
-  assert.not(list.insert(7, ""), "reject index larger than length with false");
 });
 
 test.run();
