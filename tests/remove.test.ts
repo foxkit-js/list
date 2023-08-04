@@ -18,8 +18,7 @@ test("handles weird inputs", () => {
 });
 
 test("can remove item after head", () => {
-  const list = new List();
-  for (const item of lorem) list.push(item);
+  const list = new List(lorem);
 
   assert.ok(list.remove(1), "remove one item in the list");
   assert.is(list.head, "lorem", "head unchanged");
@@ -39,8 +38,7 @@ test("can remove item after head", () => {
 });
 
 test("can remove from start of list", () => {
-  const list = new List();
-  for (const item of lorem) list.push(item);
+  const list = new List(lorem);
 
   assert.ok(list.remove(0, 2), "remove two items from start of the list");
   assert.is(list.head, lorem[2], "updated head");
@@ -54,8 +52,8 @@ test("can remove from start of list", () => {
 });
 
 test("can remove from end of list", () => {
-  const list = new List();
-  for (const item of lorem) list.push(item);
+  const list = new List(lorem);
+
   assert.ok(list.remove(4, 10), "remove all element starting with index 4");
   assert.is(list.tail, lorem[3], "updated tail");
   assert.is(
@@ -68,8 +66,8 @@ test("can remove from end of list", () => {
 });
 
 test("can remove multiple from middle of list", () => {
-  const list = new List();
-  for (const item of lorem) list.push(item);
+  const list = new List(lorem);
+
   assert.ok(list.remove(2, 3), "remove items from middle of list");
   assert.is(list.get(0), lorem[0]);
   assert.is(list.get(1), lorem[1]);

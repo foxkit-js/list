@@ -5,7 +5,7 @@ import { assertValidList } from "./utils/assertValidList";
 import { lorem } from "./utils/lorem";
 
 test("Can clone list", () => {
-  const list = List.fromArray(lorem);
+  const list = new List(lorem);
   const clone = list.clone();
   assertValidList(clone);
 

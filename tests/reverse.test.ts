@@ -5,7 +5,7 @@ import { assertValidList } from "./utils/assertValidList";
 import { lorem } from "./utils/lorem";
 
 test("Can reverse List", () => {
-  const list = List.fromArray(lorem).reverse();
+  const list = new List(lorem).reverse();
   assert.equal(list.toArray(), [...lorem].reverse());
   assertValidList(list);
 });

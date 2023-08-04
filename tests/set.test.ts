@@ -4,8 +4,7 @@ import { List } from "../src";
 import { assertValidList } from "./utils/assertValidList";
 
 test("Can set value by index", () => {
-  const list = new List();
-  list.push("lorem").push("ipsum").push("dolor");
+  const list = new List(["lorem", "ipsum", "dolor"]);
 
   // invalid index
   assert.not(list.set(-1, "foobar"), "reject negative number with false");

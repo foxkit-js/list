@@ -5,8 +5,7 @@ import { assertValidList } from "./utils/assertValidList";
 import { lorem } from "./utils/lorem";
 
 test("Can concat list", () => {
-  const list = new List();
-  list.push("first");
+  const list = new List(["first"]);
   const expected = ["first", ...lorem];
 
   // with Array
@@ -22,7 +21,7 @@ test("Can concat list", () => {
   assertValidList(output);
 
   // with List
-  output = list.concat(List.fromArray(lorem));
+  output = list.concat(new List(lorem));
   for (let i = 0; i < expected.length; i++) {
     assert.is(
       output.get(i),

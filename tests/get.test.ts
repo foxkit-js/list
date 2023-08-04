@@ -10,7 +10,7 @@ test("Can get value by index", () => {
   assert.is(list.get(0), undefined, "return undefined for empty list");
 
   // fill list
-  for (const item of lorem) list.push(item);
+  list.insertArray(0, lorem);
 
   // number out of range
   assert.is(list.get(-1), undefined, "reject negative number with undefined");

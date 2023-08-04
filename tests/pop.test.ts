@@ -4,8 +4,7 @@ import { List } from "../src";
 import { assertValidList } from "./utils/assertValidList";
 
 test("Can pop elements from List", () => {
-  const list = new List();
-  list.push("lorem").push("ipsum").push("dolor");
+  const list = new List(["lorem", "ipsum", "dolor"]);
 
   // pop once
   assert.is(list.pop(), "dolor", "popped tail");
