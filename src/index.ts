@@ -64,9 +64,11 @@ export class List<T> {
   }
 
   /**
-   * Creates new List from Array
+   * Creates new List from Array. This method has been deprecated in v1.2.0 and
+   * will be removed in a future version. Use the new constructor instead!
    * @param arr Array to turn into List
    * @returns List
+   * @deprecated
    */
   static fromArray<T>(arr: T[] | readonly T[]): List<T> {
     const list = new List<T>();
