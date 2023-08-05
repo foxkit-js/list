@@ -25,12 +25,13 @@ Create a new list and use [methods](docs/README.md) to add and interact with dat
 ```js
 import { List } from "@foxkit/list";
 
-const list = new List();
-list.push("foobar").push("bazbar");
+const list = new List(["foo", "bar"]);
+list.push("baz");
 list.forEach(val => console.log(val));
 /* logs:
- * "foobar"
- * "bazbar"
+ * "foo
+ * "bar"
+ * "baz"
  */
 ```
 

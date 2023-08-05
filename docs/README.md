@@ -1,6 +1,19 @@
 # Foxkit List Manual
 
-This page serves as the index to the manual:
+## Creating a List
+
+The constructor takes any iterable (such as Arrays or Sets) and creates a List. You can also not pass anything and add things later:
+
+```js
+const list = new List(["lorem", "ipsum", "dolor"]);
+```
+
+```js
+const list = new List();
+list.push("lorem");
+```
+
+## Table of Contents
 
 - [Usage with TypeScript](typescript.md)
 - [Static Methods](static-methods.md)

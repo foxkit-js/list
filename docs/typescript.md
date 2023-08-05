@@ -2,13 +2,13 @@
 
 Lists have full support for TypeScript out of the box. The types are packaged, so no external packages are required.
 
-Generic Types are used on constructor and some methods to infer types or allow for overiding:
+Generic Types are used on constructor (and on some methods) to infer types or allow for overiding:
 
 ```ts
 const list = new List<string>();
 //    ^? List<string>
 
-const numbers = List.fromArray([0, 1, 2]);
+const numbers = new List([0, 1, 2]);
 //    ^? List<number>
 ```
 
@@ -32,7 +32,7 @@ The `ListValue` type helper can be used to extract the type of a List into a typ
 import { List } from "@foxkit/list";
 import type { ListValue } from "@foxkit/list";
 
-const list = List.fromArray([1, 2, "episode 1", "episode 2"]);
+const list = new List([1, 2, "episode 1", "episode 2"]);
 type MyValue = ListValue<typeof list>;
 //   ^? number | string
 ```
