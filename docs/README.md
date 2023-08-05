@@ -15,6 +15,7 @@ list.push("lorem");
 
 ## Table of Contents
 
+- [Array vs List](array-vs-list.md)
 - [Usage with TypeScript](typescript.md)
 - [Static Methods](static-methods.md)
 - [List Properties](properties.md)
