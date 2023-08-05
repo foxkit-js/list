@@ -11,4 +11,4 @@ export const lorem: Readonly<Array<string>> = [
   "adipisicing" // 6
 ]; // length: 7
 
-export const loremList = List.fromArray(lorem);
+export const loremList = new List(lorem);

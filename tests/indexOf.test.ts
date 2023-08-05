@@ -4,7 +4,7 @@ import { List } from "../src";
 import { lorem } from "./utils/lorem";
 
 test("Can find index of value", () => {
-  const list = List.fromArray(lorem);
+  const list = new List(lorem);
 
   assert.is(list.indexOf("ipsum"), 1);
   assert.is(list.indexOf("foobarbazbonk"), -1);

@@ -4,7 +4,7 @@ import { List } from "../src";
 import { lorem } from "./utils/lorem";
 
 test("Can find value by condition", () => {
-  const list = List.fromArray(lorem);
+  const list = new List(lorem);
   const test = (value: string) => value.endsWith("sum");
 
   assert.is(list.find(test), lorem.find(test));

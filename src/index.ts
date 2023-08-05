@@ -35,10 +35,40 @@ export class List<T> {
   #tail: ListNode<T> | null = null;
   #length: number = 0;
 
+  constructor(from?: Iterable<T>) {
+    if (!from) return;
+
+    // spawn iterator
+    const iterator = from[Symbol.iterator]();
+    let iterable = iterator.next();
+    if (iterable.done) return;
+
+    // prepare first node
+    const head = new ListNode(iterable.value);
+    let prev = head;
+    let length = 1;
+
+    // iterate and create list
+    while (!(iterable = iterator.next()).done) {
+      const node = new ListNode(iterable.value);
+      node.prev = prev;
+      prev.next = node;
+      prev = node;
+      length++;
+    }
+
+    // save to properties
+    this.#head = head;
+    this.#tail = prev;
+    this.#length = length;
+  }
+
   /**
-   * Creates new List from Array
+   * Creates new List from Array. This method has been deprecated in v1.2.0 and
+   * will be removed in a future version. Use the new constructor instead!
    * @param arr Array to turn into List
    * @returns List
+   * @deprecated
    */
   static fromArray<T>(arr: T[] | readonly T[]): List<T> {
     const list = new List<T>();

@@ -8,7 +8,7 @@ test("Can convert List to Array", () => {
 
   assert.equal(list.toArray(), [], "return empty array for empty list");
 
-  for (const item of lorem) list.push(item);
+  list.insertArray(0, lorem);
   assert.equal(list.toArray(), lorem, "return equal array to input");
 });
 
