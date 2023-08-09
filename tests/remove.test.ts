@@ -44,7 +44,7 @@ test("can remove from start of list", () => {
   assert.is(list.head, lorem[2], "updated head");
   assert.is(
     list.getNode(0)?.prev,
-    null,
+    undefined,
     "head does not point back at removed node"
   );
   assert.is(list.length, lorem.length - 2, "updated length");
@@ -58,7 +58,7 @@ test("can remove from end of list", () => {
   assert.is(list.tail, lorem[3], "updated tail");
   assert.is(
     list.getNode(3)?.next,
-    null,
+    undefined,
     "tail does not point forward to removed node"
   );
   assert.is(list.length, 4, "updated length");
