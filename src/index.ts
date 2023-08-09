@@ -1,21 +1,4 @@
-class ListNode<T> {
-  /**
-   * Next node in the linked list
-   */
-  next: ListNode<T> | null = null;
-  /**
-   * Previous node in the linked list
-   */
-  prev: ListNode<T> | null = null;
-  /**
-   * Current value of this node
-   */
-  value: T;
-
-  constructor(value: T) {
-    this.value = value;
-  }
-}
+import { ListNode } from "./node";
 
 export type { ListNode };
 
@@ -31,8 +14,8 @@ export type ListTest<T> = (
 ) => boolean;
 
 export class List<T> {
-  #head: ListNode<T> | null = null;
-  #tail: ListNode<T> | null = null;
+  #head?: ListNode<T>;
+  #tail?: ListNode<T>;
   #length: number = 0;
 
   constructor(from?: Iterable<T>) {
@@ -61,21 +44,6 @@ export class List<T> {
     this.#head = head;
     this.#tail = prev;
     this.#length = length;
-  }
-
-  /**
-   * Creates new List from Array. This method has been deprecated in v1.2.0 and
-   * will be removed in a future version. Use the new constructor instead!
-   * @param arr Array to turn into List
-   * @returns List
-   * @deprecated
-   */
-  static fromArray<T>(arr: T[] | readonly T[]): List<T> {
-    const list = new List<T>();
-    for (let i = 0; i < arr.length; i++) {
-      list.push(arr[i]);
-    }
-    return list;
   }
 
   /**
@@ -117,7 +85,7 @@ export class List<T> {
    */
   push(value: T) {
     const node = new ListNode(value);
-    if (this.#tail == null) {
+    if (!this.#tail) {
       this.#head = node;
     } else {
       this.#tail.next = node;
@@ -134,14 +102,14 @@ export class List<T> {
    * @returns Value or `undefined`
    */
   pop() {
-    if (this.#tail == null) return undefined;
+    if (!this.#tail) return;
     const node = this.#tail;
     const prev = node.prev;
 
     if (!prev) {
-      this.#head = null;
+      this.#head = undefined;
     } else {
-      prev.next = null;
+      prev.next = undefined;
     }
 
     this.#tail = prev;
@@ -156,14 +124,14 @@ export class List<T> {
    */
   shift() {
     const node = this.#head;
-    if (!node) return undefined;
+    if (!node) return;
     const next = node.next;
-    node.next = null;
+    node.next = undefined;
 
     if (!next) {
-      this.#tail = null;
+      this.#tail = undefined;
     } else {
-      next.prev = null;
+      next.prev = undefined;
     }
 
     this.#head = next;
@@ -197,9 +165,9 @@ export class List<T> {
    * @returns `ListNode` or `undefined`
    */
   getNode(n: number) {
-    if (n < 0 || n >= this.#length) return undefined;
+    if (n < 0 || n >= this.#length) return;
     const mid = this.#length / 2;
-    let curr: ListNode<T> | null;
+    let curr: ListNode<T> | undefined;
 
     if (n < mid) {
       curr = this.#head;
@@ -215,7 +183,7 @@ export class List<T> {
       }
     }
 
-    return curr || undefined;
+    return curr;
   }
 
   /**
@@ -297,8 +265,8 @@ export class List<T> {
     for (let i = 0; i < amount; i++) {
       if (!curr) return true;
       const { prev, next } = curr;
-      curr.next = null;
-      curr.prev = null;
+      curr.next = undefined;
+      curr.prev = undefined;
       this.#length--;
 
       if (prev) {
@@ -710,7 +678,7 @@ export class List<T> {
       (end ?? 0) < 0
         ? Math.max(0, this.#length + (end ?? 0))
         : end ?? this.#length;
-    let curr: ListNode<T> | null | undefined = this.getNode(startAt);
+    let curr: ListNode<T> | undefined = this.getNode(startAt);
     let index = startAt;
 
     while (curr && index < endAt) {
@@ -733,7 +701,7 @@ export class List<T> {
    */
   sort(callback?: (a: T, b: T) => number): List<T> {
     const arr = this.toArray().sort(callback);
-    return List.fromArray(arr);
+    return new List(arr);
   }
 
   /**
