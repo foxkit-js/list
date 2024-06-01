@@ -11,12 +11,5 @@ export default [
   { ignores: ["dist/**"] },
   foxkit.configure({ strict: true }),
   foxkitTS.configure({ tsconfigRootDir: __dirname, strict: true }),
-  {
-    files: ["**/*.ts"],
-    rules: {
-      "no-use-before-define": "off",
-      "@typescript-eslint/no-use-before-define": "error"
-    }
-  },
   prettier
 ];
