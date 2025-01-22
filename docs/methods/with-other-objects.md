@@ -53,16 +53,3 @@ const newList = list.concat(["baz", "foobar"]);
 list.toString(); // "foo,bar"
 newList.toString(); // "foo,bar,baz,foobar"
 ```
-
-## `entries`
-
-Creates iterable of index, value pairs for every entry in the List.
-
-```js
-const list = List.fromArray(["foo", "bar"]);
-for (const [i, v] of list.entries()) {
-  console.log(`Index: ${i}, Value: ${v}`);
-  // Index: 0, Value: foo
-  // Index: 1, Value: bar
-}
-```
