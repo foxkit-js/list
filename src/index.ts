@@ -708,7 +708,7 @@ export class List<T> {
     const endAt =
       (end ?? 0) < 0
         ? Math.max(0, this.#length + (end ?? 0))
-        : end ?? this.#length;
+        : (end ?? this.#length);
     let curr: ListNode<T> | null | undefined = this.getNode(startAt);
     let index = startAt;
 
