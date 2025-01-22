@@ -22,17 +22,17 @@ export class List<T> {
 
     // spawn iterator
     const iterator = from[Symbol.iterator]();
-    let iterable = iterator.next();
-    if (iterable.done) return;
+    let result = iterator.next();
+    if (result.done) return;
 
     // prepare first node
-    const head = new ListNode(iterable.value);
+    const head = new ListNode(result.value);
     let prev = head;
     let length = 1;
 
     // iterate and create list
-    while (!(iterable = iterator.next()).done) {
-      const node = new ListNode(iterable.value);
+    while (!(result = iterator.next()).done) {
+      const node = new ListNode(result.value);
       node.prev = prev;
       prev.next = node;
       prev = node;
@@ -397,6 +397,70 @@ export class List<T> {
 
     this.connectLose(index, firstInserted, currentInserted);
     this.#length += list.length;
+    return true;
+  }
+
+  /**
+   * Insert any iterable into the current List at a given index
+   */
+  insertMany(index: number, iterable: Iterable<T>) {
+    if (index < 0 || index > this.length) return false;
+
+    // at end of list
+    if (index == this.length) {
+      for (const val of iterable) {
+        this.push(val);
+      }
+      return true;
+    }
+
+    //let prev: undefined | ListNode<T>;
+    //let end: undefined | ListNode<T>;
+
+    // at start of list
+    if (index == 0) {
+      const iterator = iterable[Symbol.iterator]();
+      let result = iterator.next();
+      if (result.done) return true;
+
+      // prepare first node
+      const newHead = new ListNode(result.value);
+      let prev = newHead;
+      let length = 1;
+
+      // iterate and create linked nodes
+      while (!(result = iterator.next()).done) {
+        const node = new ListNode(result.value);
+        node.prev = prev;
+        prev.next = node;
+        prev = node;
+        length++;
+      }
+
+      // update list
+      this.#length += length;
+      if (this.#head) {
+        this.#head.prev = prev;
+      }
+      this.#head = newHead;
+      return true;
+    }
+
+    // in middle of list
+    const start = this.getNode(index);
+    if (!start) return false;
+    let prev = start;
+    const end = start.next;
+
+    for (const val of iterable) {
+      const node = new ListNode(val);
+      node.prev = prev;
+      prev.next = node;
+      prev = node;
+      this.#length++;
+    }
+
+    prev.next = end;
     return true;
   }
 
