@@ -764,4 +764,35 @@ export class List<T> {
   toString() {
     return this.join(",");
   }
+
+  *[Symbol.iterator]() {
+    const seenNodes = new Set<ListNode<T>>();
+    let curr = this.#head;
+    let idx = 0;
+
+    while (idx < this.length) {
+      if (curr) {
+        yield curr.value;
+        seenNodes.add(curr);
+        curr = curr.next;
+        idx++;
+        continue;
+      }
+
+      if (idx >= this.length) return;
+
+      // find current element assuming list got modified
+      let temp = this.#head;
+      let i = 0;
+      while (temp && i < idx) {
+        temp = temp.next;
+        i++;
+      }
+
+      if (temp && i == idx) {
+        curr = temp;
+        continue;
+      }
+    }
+  }
 }
