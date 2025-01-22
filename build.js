@@ -3,7 +3,9 @@ import path from "path";
 import * as esbuild from "esbuild";
 
 /**
- * Base config for esbuild
+ * Build config for esbuild
+ * @typedef {import("esbuild").BuildOptions} BuildOptions
+ * @type {BuildOptions}
  */
 const config = {
   /**
@@ -43,34 +45,113 @@ const config = {
   target: "es2022"
 };
 
-async function build() {
-  // Clean dist directory
+/**
+ * Removes old build directory and creates a fresh one
+ */
+async function handleClean() {
   console.log("Cleaning");
   await fs.rm(config.outdir, { recursive: true, force: true });
+  await fs.mkdir(config.outdir);
+}
 
-  // Build esm bundles
+async function handlePkgJson() {
+  const pkg = await fs
+    .readFile("package.json", "utf-8")
+    .then(file => JSON.parse(file));
+  if (typeof pkg != "object" || pkg === null) {
+    throw new Error("Could not read package.json");
+  }
+
+  console.log("Processing package.json");
+  const { removeFields, ...publishConfig } = pkg.publishConfig || {};
+  const removedFields = new Set(
+    ["devDependencies", "publishConfig"].concat(
+      Array.isArray(removeFields) ? removeFields : []
+    )
+  );
+  const pkgProcessed = Object.assign(
+    {},
+    Object.fromEntries(
+      Object.entries(pkg).filter(([key]) => !removedFields.has(key))
+    ),
+    publishConfig || {}
+  );
+
+  return fs.writeFile(
+    path.join(config.outdir, "package.json"),
+    JSON.stringify(pkgProcessed, null, 2),
+    "utf-8"
+  );
+}
+
+/**
+ * Statically copy files or directories to the outdir
+ * @typedef {string | [string, string]} File
+ * @typedef {File[]} Files
+ * @param {Files} files Array of files to copy to outdir. Use nested array to change filename such as ["foo.build.json", "foo.json"].
+ * @returns
+ */
+async function copyFiles(files) {
+  const res = await Promise.allSettled(
+    files.map(file => {
+      const [fileIn, fileOut] = Array.isArray(file) ? file : [file, file];
+      const outPath = path.join(config.outdir, fileOut);
+      console.log(`Copying ${fileIn} to ${outPath}`);
+      return fs.cp(fileIn, outPath, { force: true, recursive: true });
+    })
+  );
+
+  const err = res.find(r => r.status == "rejected");
+  if (err) {
+    throw new Error(`Error while copying files: ${err.reason}`);
+  }
+
+  return;
+}
+
+/**
+ * Handle build of ESM bundle
+ * @returns Promise
+ */
+function buildESM() {
   console.log("Building esm bundles");
-  await esbuild.build({
+  return esbuild.build({
     ...config,
     format: "esm"
   });
+}
 
-  // Build cjs bundles
+/**
+ * Handle build of CJS bundle
+ * @returns Promise
+ */
+function buildCJS() {
   console.log("Building cjs bundles");
-  await esbuild.build({
+  return esbuild.build({
     ...config,
     format: "cjs",
     outExtension: { ".js": ".cjs" }
   });
+}
 
-  // Copy README file
-  console.log("Copying README.md");
-  await fs.cp("./README.md", path.join(config.outdir, "README.md"));
+async function build() {
+  // Clean dist directory
+  await handleClean();
 
-  // Copy Documentation
-  console.log("Copying Documentation");
-  const distDocs = path.join(config.outdir, "docs");
-  await fs.cp("docs", distDocs, { recursive: true });
+  console.log("Starting build");
+  const res = await Promise.allSettled([
+    buildESM(),
+    buildCJS(),
+    copyFiles(["README.md", "LICENSE", "docs"]),
+    handlePkgJson()
+  ]);
+
+  // handle logging errors
+  const err = res.filter(r => r.status === "rejected");
+  for (const e of err) {
+    console.error(`BuildError: ${e.reason}`);
+  }
+  if (err.length > 0) process.exit(1);
 }
 
 build().then(() => {

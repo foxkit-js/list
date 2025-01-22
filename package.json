@@ -22,7 +22,7 @@
     "lint:strict": "eslint --max-warnings 0 .",
     "typecheck": "tsc",
     "test": "uvu -r esbuild-register tests -i utils",
-    "build": "node build.js && tsc -p tsconfig.build.json && clear-package-json package.json -o dist/package.json"
+    "build": "node build.js && tsc -p tsconfig.build.json"
   },
   "nano-staged": {
     "**/*.{js,cjs,mjs,ts,json,md,yaml}": [
@@ -37,17 +37,12 @@
     "*.d.ts",
     "index.*"
   ],
-  "clean-publish": {
-    "packageManager": "pnpm",
-    "withoutPublish": true,
-    "tempDir": "dist",
-    "fields": [
+  "publishConfig": {
+    "removeFields": [
       "scripts",
       "nano-staged",
       "simple-git-hooks"
-    ]
-  },
-  "publishConfig": {
+    ],
     "access": "public",
     "main": "index.cjs",
     "module": "index.js",
@@ -55,7 +50,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
-    "clean-publish": "^5.1.0",
     "esbuild": "^0.24.2",
     "esbuild-register": "^3.6.0",
     "eslint": "^9.18.0",
