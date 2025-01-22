@@ -324,15 +324,7 @@ export class List<T> {
    * @returns Array
    */
   toArray(): T[] {
-    const arr = new Array<T>();
-
-    let curr = this.#head;
-    while (curr) {
-      arr.push(curr.value);
-      curr = curr.next;
-    }
-
-    return arr;
+    return Array.from(this);
   }
 
   /**
@@ -445,12 +437,7 @@ export class List<T> {
    * @returns new List
    */
   clone(): List<T> {
-    const newList = new List<T>();
-    let curr = this.#head;
-    while (curr) {
-      newList.push(curr.value);
-      curr = curr.next;
-    }
+    const newList = new List<T>(this);
     return newList;
   }
 
@@ -723,7 +710,7 @@ export class List<T> {
    */
   sort(callback?: (a: T, b: T) => number): List<T> {
     const arr = this.toArray().sort(callback);
-    return List.fromArray(arr);
+    return new List(arr);
   }
 
   /**
