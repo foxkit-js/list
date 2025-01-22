@@ -438,15 +438,6 @@ export class List<T> {
   }
 
   /**
-   * Creates iterable of index, value pairs for every entry in the List.
-   * @returns IterableIterator
-   */
-  // not tested as this is basically a proxy of the existing Array method
-  entries() {
-    return this.toArray().entries();
-  }
-
-  /**
    * Checks if a test callback returns `true` for every value
    * @param callback Test callback
    * @returns boolean
