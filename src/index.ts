@@ -296,113 +296,6 @@ export class List<T> {
   }
 
   /**
-   * Utility method for insertArray and insertList that connects a lose list
-   * of already connected nodes into the existing list at a given index
-   * @param index index at which to insert
-   * @param first first inserted node
-   * @param last last inserted node
-   * @returns void
-   */
-  private connectLose(index: number, first: ListNode<T>, last: ListNode<T>) {
-    switch (index) {
-      case 0: {
-        const oldHead = this.#head;
-        if (oldHead) {
-          last.next = oldHead;
-          oldHead.prev = last;
-        } else {
-          this.#tail = last;
-        }
-        this.#head = first;
-        break;
-      }
-
-      case this.length: {
-        const oldTail = this.#tail;
-        if (oldTail) {
-          oldTail.next = first;
-          first.prev = oldTail;
-        } else {
-          this.#head = first;
-        }
-        this.#tail = last;
-        break;
-      }
-
-      default: {
-        const target = this.getNode(index);
-        if (!target) return false;
-
-        const prev = target.prev;
-        first.prev = prev;
-        if (prev) prev.next = first;
-
-        last.next = target;
-        target.prev = last;
-      }
-    }
-  }
-
-  /**
-   * Inserts all values from an Array into List at a given index and
-   * returns `true`. If the index is outside of the range of the List
-   * `false` is returned.
-   * @deprecated use insertMany instead
-   * @param index Index at which to start insertion
-   * @param arr Array of Values
-   * @returns boolean
-   */
-  insertArray(index: number, arr: T[] | readonly T[]): boolean {
-    if (index < 0 || index > this.length) return false;
-    if (arr.length < 1) return true;
-
-    // create new list
-    const firstInserted = new ListNode(arr[0]);
-    let currentInserted = firstInserted;
-    for (let i = 1; i < arr.length; i++) {
-      const node = new ListNode(arr[i]);
-      currentInserted.next = node;
-      node.prev = currentInserted;
-      currentInserted = node;
-    }
-
-    this.connectLose(index, firstInserted, currentInserted);
-    this.#length += arr.length;
-    return true;
-  }
-
-  /**
-   * Inserts all values from another List into List at a given index and
-   * returns `true`. If the index is outside of the range of the List `false` is
-   * returned.
-   * @deprecated use insertMany instead
-   * @param index Index at which to start insertion
-   * @param list List from which to take values
-   * @returns boolean
-   */
-  insertList(index: number, list: List<T>): boolean {
-    if (index < 0 || index > this.length || !List.isList(list)) return false;
-    const listHead = list.getNode(0);
-    if (!listHead) return true; // list.length == 0
-
-    // create new list
-    const firstInserted = new ListNode(listHead.value);
-    let currentInserted = firstInserted;
-    let iter = listHead.next;
-    while (iter) {
-      const node = new ListNode(iter.value);
-      currentInserted.next = node;
-      node.prev = currentInserted;
-      currentInserted = node;
-      iter = iter.next;
-    }
-
-    this.connectLose(index, firstInserted, currentInserted);
-    this.#length += list.length;
-    return true;
-  }
-
-  /**
    * Inserts all values from another iterable (List, Array, etc.) into List at a
    * given index. If the index is out of range values will be inserted at the
    * start or end of the List as applicable.
@@ -471,13 +364,9 @@ export class List<T> {
    * @param value List or Array of Values
    * @returns new List
    */
-  concat(value: List<T> | Array<T> | readonly T[]): List<T> {
+  concat(value: Iterable<T>): List<T> {
     const newList = this.clone();
-    if (List.isList(value)) {
-      newList.insertList(newList.length, value);
-    } else {
-      newList.insertArray(newList.length, value);
-    }
+    newList.insertMany(newList.length, value);
     return newList;
   }
 
