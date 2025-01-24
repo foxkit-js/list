@@ -347,6 +347,7 @@ export class List<T> {
    * Inserts all values from an Array into List at a given index and
    * returns `true`. If the index is outside of the range of the List
    * `false` is returned.
+   * @deprecated use insertMany instead
    * @param index Index at which to start insertion
    * @param arr Array of Values
    * @returns boolean
@@ -374,6 +375,7 @@ export class List<T> {
    * Inserts all values from another List into List at a given index and
    * returns `true`. If the index is outside of the range of the List `false` is
    * returned.
+   * @deprecated use insertMany instead
    * @param index Index at which to start insertion
    * @param list List from which to take values
    * @returns boolean
@@ -400,67 +402,52 @@ export class List<T> {
     return true;
   }
 
-  /**
-   * Insert any iterable into the current List at a given index
-   */
   insertMany(index: number, iterable: Iterable<T>) {
+    // TODO: could clamp index instead and return void?
     if (index < 0 || index > this.length) return false;
+    let prev: undefined | ListNode<T>; // current node in loop
+    let next: undefined | ListNode<T>; // node after inserted
 
-    // at end of list
-    if (index == this.length) {
-      for (const val of iterable) {
-        this.push(val);
-      }
-      return true;
-    }
-
-    //let prev: undefined | ListNode<T>;
-    //let end: undefined | ListNode<T>;
-
-    // at start of list
+    // get nodes before and after inserted values if applicable
     if (index == 0) {
-      const iterator = iterable[Symbol.iterator]();
-      let result = iterator.next();
-      if (result.done) return true;
-
-      // prepare first node
-      const newHead = new ListNode(result.value);
-      let prev = newHead;
-      let length = 1;
-
-      // iterate and create linked nodes
-      while (!(result = iterator.next()).done) {
-        const node = new ListNode(result.value);
-        node.prev = prev;
-        prev.next = node;
-        prev = node;
-        length++;
-      }
-
-      // update list
-      this.#length += length;
-      if (this.#head) {
-        this.#head.prev = prev;
-      }
-      this.#head = newHead;
-      return true;
+      prev = undefined;
+      next = this.#head;
+      this.#head = undefined;
+    } else if (index == this.length) {
+      prev = this.#tail;
+      next = undefined;
+    } else {
+      next = this.getNode(index);
+      prev = next?.prev;
     }
 
-    // in middle of list
-    const start = this.getNode(index);
-    if (!start) return false;
-    let prev = start;
-    const end = start.next;
-
+    // append to list
     for (const val of iterable) {
       const node = new ListNode(val);
-      node.prev = prev;
-      prev.next = node;
+
+      // connect to previous element, if none this is the new first list node
+      if (prev) {
+        node.prev = prev;
+        prev.next = node;
+      } else {
+        this.#head = node;
+      }
+
       prev = node;
       this.#length++;
     }
 
-    prev.next = end;
+    // connect to node after inserted values if applicable,
+    // or update tail otherwise as there are no values past this
+    if (prev) {
+      if (next) {
+        next.prev = prev;
+        prev.next = next;
+      } else {
+        this.#tail = prev;
+      }
+    }
+
     return true;
   }
 
