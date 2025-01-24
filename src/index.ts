@@ -163,7 +163,7 @@ export class List<T> {
    * @param n Index of the element
    * @returns `ListNode` or `undefined`
    */
-  getNode(n: number) {
+  private getNode(n: number) {
     if (n < 0 || n >= this.#length) return;
     const mid = this.#length / 2;
     let curr: ListNode<T> | undefined;
