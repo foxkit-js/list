@@ -402,18 +402,24 @@ export class List<T> {
     return true;
   }
 
+  /**
+   * Inserts all values from another iterable (List, Array, etc.) into List at a
+   * given index. If the index is out of range values will be inserted at the
+   * start or end of the List as applicable.
+   * @param index
+   * @param iterable
+   * @returns `this` Reference
+   */
   insertMany(index: number, iterable: Iterable<T>) {
-    // TODO: could clamp index instead and return void?
-    if (index < 0 || index > this.length) return false;
     let prev: undefined | ListNode<T>; // current node in loop
     let next: undefined | ListNode<T>; // node after inserted
 
     // get nodes before and after inserted values if applicable
-    if (index == 0) {
+    if (index <= 0) {
       prev = undefined;
       next = this.#head;
       this.#head = undefined;
-    } else if (index == this.length) {
+    } else if (index >= this.length) {
       prev = this.#tail;
       next = undefined;
     } else {
@@ -448,7 +454,7 @@ export class List<T> {
       }
     }
 
-    return true;
+    return this;
   }
 
   /**
