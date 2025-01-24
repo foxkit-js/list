@@ -93,4 +93,22 @@ test("inserts at start of list if index too low", () => {
   assert.is(list.head, expected[0], "updated head correctly");
 });
 
+test("inserts into empty list correctly", () => {
+  const list = new List<string>();
+  list.insertMany(0, expected);
+  assertValidList(list);
+
+  for (let i = 0; i < expected.length; i++) {
+    assert.is(
+      list.get(i),
+      expected[i],
+      `inserted at start of list (index: ${i})`
+    );
+  }
+
+  assert.is(list.length, expected.length, "updated length after insertion");
+  assert.is(list.head, expected[0], "updated head correctly");
+  assert.is(list.tail, expected[expected.length - 1], "updated tail correctly");
+});
+
 test.run();
