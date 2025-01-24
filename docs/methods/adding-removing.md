@@ -46,16 +46,6 @@ list.unshift("ipsum").unshift("dolor");
 list.toString(); // "dolor,ipsum,lorem"
 ```
 
-## `getNode`
-
-Gets `ListNode` at specific index. If the index is outside of the range of the List `undefined` is returned.
-
-```js
-const list = new List();
-list.pop("lorem");
-list.getNode(0); // ListNode { value: "lorem" }
-```
-
 ## `get`
 
 Gets value at specific index. If the index is outside of the range of the List `undefined` is returned.
