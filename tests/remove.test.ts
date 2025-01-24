@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { test } from "uvu";
 import * as assert from "uvu/assert";
 import { List } from "../src";
@@ -24,13 +25,13 @@ test("can remove item after head", () => {
   assert.is(list.head, "lorem", "head unchanged");
   assert.is(list.get(1), lorem[2], "removed item at index 1");
   assert.is(
-    list.getNode(1)?.prev,
-    list.getNode(0),
+    list["getNode"](1)?.prev,
+    list["getNode"](0),
     "new item at index 1 points back to head"
   );
   assert.is(
-    list.getNode(0)?.next,
-    list.getNode(1),
+    list["getNode"](0)?.next,
+    list["getNode"](1),
     "head updated to point to new item at index 1"
   );
   assert.is(list.length, lorem.length - 1, "updated length");
@@ -43,7 +44,7 @@ test("can remove from start of list", () => {
   assert.ok(list.remove(0, 2), "remove two items from start of the list");
   assert.is(list.head, lorem[2], "updated head");
   assert.is(
-    list.getNode(0)?.prev,
+    list["getNode"](0)?.prev,
     undefined,
     "head does not point back at removed node"
   );
@@ -57,7 +58,7 @@ test("can remove from end of list", () => {
   assert.ok(list.remove(4, 10), "remove all element starting with index 4");
   assert.is(list.tail, lorem[3], "updated tail");
   assert.is(
-    list.getNode(3)?.next,
+    list["getNode"](3)?.next,
     undefined,
     "tail does not point forward to removed node"
   );
