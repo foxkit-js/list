@@ -46,7 +46,7 @@ list.some(v => v.endsWith("foo")); // false
 Creates new list with only the values that the test callback returns `true` for.
 
 ```js
-const list = List.fromArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+const list = new List([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 const filtered = list.filter(v => v % 2 == 0);
 filtered.toString(); // "0,2,4,6,8"
 ```

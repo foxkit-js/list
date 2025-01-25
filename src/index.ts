@@ -1,21 +1,4 @@
-class ListNode<T> {
-  /**
-   * Next node in the linked list
-   */
-  next: ListNode<T> | null = null;
-  /**
-   * Previous node in the linked list
-   */
-  prev: ListNode<T> | null = null;
-  /**
-   * Current value of this node
-   */
-  value: T;
-
-  constructor(value: T) {
-    this.value = value;
-  }
-}
+import { ListNode } from "./node";
 
 export type { ListNode };
 
@@ -30,8 +13,8 @@ export type ListTest<T> = (
 ) => boolean;
 
 export class List<T> {
-  #head: ListNode<T> | null = null;
-  #tail: ListNode<T> | null = null;
+  #head?: ListNode<T>;
+  #tail?: ListNode<T>;
   #length: number = 0;
 
   constructor(from?: Iterable<T>) {
@@ -39,17 +22,17 @@ export class List<T> {
 
     // spawn iterator
     const iterator = from[Symbol.iterator]();
-    let iterable = iterator.next();
-    if (iterable.done) return;
+    let result = iterator.next();
+    if (result.done) return;
 
     // prepare first node
-    const head = new ListNode(iterable.value);
+    const head = new ListNode(result.value);
     let prev = head;
     let length = 1;
 
     // iterate and create list
-    while (!(iterable = iterator.next()).done) {
-      const node = new ListNode(iterable.value);
+    while (!(result = iterator.next()).done) {
+      const node = new ListNode(result.value);
       node.prev = prev;
       prev.next = node;
       prev = node;
@@ -60,21 +43,6 @@ export class List<T> {
     this.#head = head;
     this.#tail = prev;
     this.#length = length;
-  }
-
-  /**
-   * Creates new List from Array. This method has been deprecated in v1.2.0 and
-   * will be removed in a future version. Use the new constructor instead!
-   * @param arr Array to turn into List
-   * @returns List
-   * @deprecated
-   */
-  static fromArray<T>(arr: T[] | readonly T[]): List<T> {
-    const list = new List<T>();
-    for (let i = 0; i < arr.length; i++) {
-      list.push(arr[i]);
-    }
-    return list;
   }
 
   /**
@@ -116,7 +84,7 @@ export class List<T> {
    */
   push(value: T) {
     const node = new ListNode(value);
-    if (this.#tail == null) {
+    if (!this.#tail) {
       this.#head = node;
     } else {
       this.#tail.next = node;
@@ -133,14 +101,14 @@ export class List<T> {
    * @returns Value or `undefined`
    */
   pop() {
-    if (this.#tail == null) return undefined;
+    if (!this.#tail) return;
     const node = this.#tail;
     const prev = node.prev;
 
     if (!prev) {
-      this.#head = null;
+      this.#head = undefined;
     } else {
-      prev.next = null;
+      prev.next = undefined;
     }
 
     this.#tail = prev;
@@ -155,14 +123,14 @@ export class List<T> {
    */
   shift() {
     const node = this.#head;
-    if (!node) return undefined;
+    if (!node) return;
     const next = node.next;
-    node.next = null;
+    node.next = undefined;
 
     if (!next) {
-      this.#tail = null;
+      this.#tail = undefined;
     } else {
-      next.prev = null;
+      next.prev = undefined;
     }
 
     this.#head = next;
@@ -195,10 +163,10 @@ export class List<T> {
    * @param n Index of the element
    * @returns `ListNode` or `undefined`
    */
-  getNode(n: number) {
-    if (n < 0 || n >= this.#length) return undefined;
+  private getNode(n: number) {
+    if (n < 0 || n >= this.#length) return;
     const mid = this.#length / 2;
-    let curr: ListNode<T> | null;
+    let curr: ListNode<T> | undefined;
 
     if (n < mid) {
       curr = this.#head;
@@ -214,7 +182,7 @@ export class List<T> {
       }
     }
 
-    return curr || undefined;
+    return curr;
   }
 
   /**
@@ -296,8 +264,8 @@ export class List<T> {
     for (let i = 0; i < amount; i++) {
       if (!curr) return true;
       const { prev, next } = curr;
-      curr.next = null;
-      curr.prev = null;
+      curr.next = undefined;
+      curr.prev = undefined;
       this.#length--;
 
       if (prev) {
@@ -324,120 +292,62 @@ export class List<T> {
    * @returns Array
    */
   toArray(): T[] {
-    const arr = new Array<T>();
-
-    let curr = this.#head;
-    while (curr) {
-      arr.push(curr.value);
-      curr = curr.next;
-    }
-
-    return arr;
+    return Array.from(this);
   }
 
   /**
-   * Utility method for insertArray and insertList that connects a lose list
-   * of already connected nodes into the existing list at a given index
-   * @param index index at which to insert
-   * @param first first inserted node
-   * @param last last inserted node
-   * @returns void
+   * Inserts all values from another iterable (List, Array, etc.) into List at a
+   * given index. If the index is out of range values will be inserted at the
+   * start or end of the List as applicable.
+   * @param index
+   * @param iterable
+   * @returns `this` Reference
    */
-  private connectLose(index: number, first: ListNode<T>, last: ListNode<T>) {
-    switch (index) {
-      case 0: {
-        const oldHead = this.#head;
-        if (oldHead) {
-          last.next = oldHead;
-          oldHead.prev = last;
-        } else {
-          this.#tail = last;
-        }
-        this.#head = first;
-        break;
-      }
+  insertMany(index: number, iterable: Iterable<T>) {
+    let prev: undefined | ListNode<T>; // current node in loop
+    let next: undefined | ListNode<T>; // node after inserted
 
-      case this.length: {
-        const oldTail = this.#tail;
-        if (oldTail) {
-          oldTail.next = first;
-          first.prev = oldTail;
-        } else {
-          this.#head = first;
-        }
-        this.#tail = last;
-        break;
-      }
-
-      default: {
-        const target = this.getNode(index);
-        if (!target) return false;
-
-        const prev = target.prev;
-        first.prev = prev;
-        if (prev) prev.next = first;
-
-        last.next = target;
-        target.prev = last;
-      }
-    }
-  }
-
-  /**
-   * Inserts all values from an Array into List at a given index and
-   * returns `true`. If the index is outside of the range of the List
-   * `false` is returned.
-   * @param index Index at which to start insertion
-   * @param arr Array of Values
-   * @returns boolean
-   */
-  insertArray(index: number, arr: T[] | readonly T[]): boolean {
-    if (index < 0 || index > this.length) return false;
-    if (arr.length < 1) return true;
-
-    // create new list
-    const firstInserted = new ListNode(arr[0]);
-    let currentInserted = firstInserted;
-    for (let i = 1; i < arr.length; i++) {
-      const node = new ListNode(arr[i]);
-      currentInserted.next = node;
-      node.prev = currentInserted;
-      currentInserted = node;
+    // get nodes before and after inserted values if applicable
+    if (index <= 0) {
+      prev = undefined;
+      next = this.#head;
+      this.#head = undefined;
+    } else if (index >= this.length) {
+      prev = this.#tail;
+      next = undefined;
+    } else {
+      next = this.getNode(index);
+      prev = next?.prev;
     }
 
-    this.connectLose(index, firstInserted, currentInserted);
-    this.#length += arr.length;
-    return true;
-  }
+    // append to list
+    for (const val of iterable) {
+      const node = new ListNode(val);
 
-  /**
-   * Inserts all values from another List into List at a given index and
-   * returns `true`. If the index is outside of the range of the List `false` is
-   * returned.
-   * @param index Index at which to start insertion
-   * @param list List from which to take values
-   * @returns boolean
-   */
-  insertList(index: number, list: List<T>): boolean {
-    if (index < 0 || index > this.length || !List.isList(list)) return false;
-    const listHead = list.getNode(0);
-    if (!listHead) return true; // list.length == 0
+      // connect to previous element, if none this is the new first list node
+      if (prev) {
+        node.prev = prev;
+        prev.next = node;
+      } else {
+        this.#head = node;
+      }
 
-    // create new list
-    const firstInserted = new ListNode(listHead.value);
-    let currentInserted = firstInserted;
-    let iter = listHead.next;
-    while (iter) {
-      const node = new ListNode(iter.value);
-      currentInserted.next = node;
-      node.prev = currentInserted;
-      currentInserted = node;
-      iter = iter.next;
+      prev = node;
+      this.#length++;
     }
 
-    this.connectLose(index, firstInserted, currentInserted);
-    this.#length += list.length;
-    return true;
+    // connect to node after inserted values if applicable,
+    // or update tail otherwise as there are no values past this
+    if (prev) {
+      if (next) {
+        next.prev = prev;
+        prev.next = next;
+      } else {
+        this.#tail = prev;
+      }
+    }
+
+    return this;
   }
 
   /**
@@ -445,12 +355,7 @@ export class List<T> {
    * @returns new List
    */
   clone(): List<T> {
-    const newList = new List<T>();
-    let curr = this.#head;
-    while (curr) {
-      newList.push(curr.value);
-      curr = curr.next;
-    }
+    const newList = new List<T>(this);
     return newList;
   }
 
@@ -459,23 +364,10 @@ export class List<T> {
    * @param value List or Array of Values
    * @returns new List
    */
-  concat(value: List<T> | Array<T> | readonly T[]): List<T> {
+  concat(value: Iterable<T>): List<T> {
     const newList = this.clone();
-    if (List.isList(value)) {
-      newList.insertList(newList.length, value);
-    } else {
-      newList.insertArray(newList.length, value);
-    }
+    newList.insertMany(newList.length, value);
     return newList;
-  }
-
-  /**
-   * Creates iterable of index, value pairs for every entry in the List.
-   * @returns IterableIterator
-   */
-  // not tested as this is basically a proxy of the existing Array method
-  entries() {
-    return this.toArray().entries();
   }
 
   /**
@@ -709,7 +601,7 @@ export class List<T> {
       (end ?? 0) < 0
         ? Math.max(0, this.#length + (end ?? 0))
         : (end ?? this.#length);
-    let curr: ListNode<T> | null | undefined = this.getNode(startAt);
+    let curr: ListNode<T> | undefined = this.getNode(startAt);
     let index = startAt;
 
     while (curr && index < endAt) {
@@ -732,7 +624,7 @@ export class List<T> {
    */
   sort(callback?: (a: T, b: T) => number): List<T> {
     const arr = this.toArray().sort(callback);
-    return List.fromArray(arr);
+    return new List(arr);
   }
 
   /**
@@ -763,5 +655,36 @@ export class List<T> {
    */
   toString() {
     return this.join(",");
+  }
+
+  *[Symbol.iterator]() {
+    const seenNodes = new Set<ListNode<T>>();
+    let curr = this.#head;
+    let idx = 0;
+
+    while (idx < this.length) {
+      if (curr) {
+        yield curr.value;
+        seenNodes.add(curr);
+        curr = curr.next;
+        idx++;
+        continue;
+      }
+
+      if (idx >= this.length) return;
+
+      // find current element assuming list got modified
+      let temp = this.#head;
+      let i = 0;
+      while (temp && i < idx) {
+        temp = temp.next;
+        i++;
+      }
+
+      if (temp && i == idx) {
+        curr = temp;
+        continue;
+      }
+    }
   }
 }

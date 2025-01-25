@@ -16,7 +16,7 @@ list.toString(); // "lorem,ipsum,dolor"
 Removes the last element from the List and returns it. If the List is empty `undefined` is returned.
 
 ```js
-const list = List.fromArray(["lorem", "ipsum"]);
+const list = new List(["lorem", "ipsum"]);
 
 list.pop(); // "ipsum"
 list.pop(); // "lorem"
@@ -28,7 +28,7 @@ list.pop(); // undefined
 Removes the first element from the List and returns it. If the List is empty `undefined` is returned.
 
 ```js
-const list = List.fromArray(["lorem", "ipsum"]);
+const list = new List(["lorem", "ipsum"]);
 
 list.shift(); // "lorem"
 list.shift(); // "ipsum"
@@ -44,16 +44,6 @@ const list = new List();
 list.unshift("lorem");
 list.unshift("ipsum").unshift("dolor");
 list.toString(); // "dolor,ipsum,lorem"
-```
-
-## `getNode`
-
-Gets `ListNode` at specific index. If the index is outside of the range of the List `undefined` is returned.
-
-```js
-const list = new List();
-list.pop("lorem");
-list.getNode(0); // ListNode { value: "lorem" }
 ```
 
 ## `get`
@@ -85,7 +75,7 @@ Inserts value at index and returns `true`. If the index is outside of the range 
 If the index would correspond to the next new element this method acts as an alias to `push`.
 
 ```js
-const list = List.fromArray(["lorem", "ipsum"]);
+const list = new List(["lorem", "ipsum"]);
 list.insert(1, "foo");
 list.insert(4, "bar");
 list.toString(); // "lorem,foo,ipsum,bar"
@@ -97,7 +87,17 @@ Removes one or more elements starting at a given index and returns `true`.
 If the index is outside the range of the List or a amount smaller than one is given `false` is returned.
 
 ```js
-const list = List.fromArray("foobazzbar".split(""));
+const list = new List("foobazzbar".split(""));
 list.remove(3, 4);
 list.join(""); // "foobar"
+```
+
+## `insertMany`
+
+Inserts all values from an Iterable into List at a given index. Further methods can be chained after this method.
+
+```js
+const list = new List([0, 1, 2]);
+list.insertMany(1, [0.5, 0.75]);
+list.join(", "); // "0, 0.5, 0.75, 1, 2"
 ```

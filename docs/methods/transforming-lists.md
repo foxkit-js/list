@@ -102,7 +102,7 @@ Creates a new List that contains a slice of value from the original List startin
 Values are copied to the new List, meaning that modifying either List will not manipulate the other!
 
 ```js
-const list = List.fromArray(["foo", "bar", "baz", "foobar", "lorem", "ipsum"]);
+const list = new List(["foo", "bar", "baz", "foobar", "lorem", "ipsum"]);
 list.slice(2, 5).toString(); // "baz,foobar,lorem"
 list.slice(-3, 6).toString(); // "foobar,lorem,ipsum"
 list.slice(1, -1).toString(); // "bar,baz,foobar,lorem"
@@ -115,7 +115,7 @@ Creates a new List with all values sorted by a comparison callback function. The
 If no callback is passed values are sorted in ascending ASCII character order.
 
 ```js
-const list = List.fromArray([0, 7, 11, 8, 9, 15, -3]);
+const list = new List([0, 7, 11, 8, 9, 15, -3]);
 const sorted = list.sort((a, b) => a - b);
 sorted.toString(); // -3,0,7,8,9,11,15
 ```
