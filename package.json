@@ -49,10 +49,10 @@
     "types": "index.d.ts"
   },
   "devDependencies": {
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.10.10",
     "esbuild": "^0.24.2",
     "esbuild-register": "^3.6.0",
-    "eslint": "^9.18.0",
+    "eslint": "^9.19.0",
     "eslint-config-foxkit": "5.0.1",
     "eslint-config-prettier": "^10.0.1",
     "nano-staged": "^0.8.0",
