@@ -10,16 +10,6 @@ list.push("ipsum").push("dolor").unshift("lorem");
 const arr = list.toArray(); // ["lorem", "ipsum", "dolor"]
 ```
 
-## `insertMany`
-
-Inserts all values from an Iterable into List at a given index. Further methods can be chained after this method.
-
-```js
-const list = new List([0, 1, 2]);
-list.insertMany(1, [0.5, 0.75]);
-list.join(", "); // "0, 0.5, 0.75, 1, 2"
-```
-
 ## `clone`
 
 Creates a copy of the current List
