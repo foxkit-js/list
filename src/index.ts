@@ -1,3 +1,4 @@
+import type { InspectOptions } from "util";
 import { ListNode } from "./node";
 
 export type { ListNode };
@@ -11,6 +12,14 @@ export type ListTest<T> = (
   self: List<T>,
   node: ListNode<T>
 ) => boolean;
+
+/* NOTE: this stuff is specifically for the node.js inspector, so probably don't
+         use that type elsewhere. I couldn't figure out how to import just the
+         type of node:util.inspect, because there's a namespace of the same type
+         and I wanted to avoid importing actual values from node, so this lib
+         can still be used in browsers and other runtimes. */
+const inspectSym = Symbol.for("nodejs.util.inspect.custom");
+type InspectFn = (subject: unknown, opts: InspectOptions) => string;
 
 export class List<T> {
   #head?: ListNode<T>;
@@ -655,6 +664,17 @@ export class List<T> {
    */
   toString() {
     return this.join(",");
+  }
+
+  /**
+   * Method for the Node.js Inspector
+   * @param _ ignored depth parameter
+   * @param options Options for the inspector to use on the list values (rendered as array)
+   * @param inspect Please pass `node:util.inspect` here, thank you
+   * @returns
+   */
+  [inspectSym](_: number, options: InspectOptions, inspect: InspectFn) {
+    return `List(${this.#length}) ${inspect(this.toArray(), options)}`;
   }
 
   *[Symbol.iterator]() {
